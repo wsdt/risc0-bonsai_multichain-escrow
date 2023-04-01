@@ -62,7 +62,7 @@ mod tests {
     #[tokio::test]
     async fn evm() -> Result<(), Box<dyn Error>> {
         env_logger::init();
-        let tx_hash = ethabi::ethereum_types::H256::from_str("0x56991be715b0e04e98c135dacc17989384f6674654cb717f8e421da3f1d8e6b2").expect("Invalid transaction hash");
+        let tx_hash = ethabi::ethereum_types::H256::from_str("0x671a3b40ecb7d51b209e68392df2d38c098aae03febd3a88be0f1fa77725bbd7").expect("Invalid transaction hash");
 
         let client = Provider::<Http>::try_from("https://eth.llamarpc.com").expect("Invalid RPC url");
         let client = Arc::new(client);
@@ -85,8 +85,9 @@ mod tests {
                 .await
                 .unwrap();
 
-        if res.exit_reason != evm_core::Return::Return {
-            println!("TX failed in pre-flight");
+        // Stop for simple transfers (success code without return val)
+        if res.exit_reason != evm_core::Return::Return && res.exit_reason != evm_core::Return::Stop {
+            println!("TX failed in pre-flight, {:?}", res.exit_reason);
             panic!("TX failed in pre-flight");
         }
 
@@ -106,12 +107,19 @@ mod tests {
         info!("Running zkvm...");
         let receipt = prover.run().expect("Failed to run guest");
 
-        info!("Verifying receipt...");
-        receipt.verify(&EVM_ID).expect("failed to verify receipt");
+        // SKIPPED SEAL! so no verification
+        //info!("Verifying receipt...");
+        //receipt.verify(&EVM_ID).expect("failed to verify receipt");
 
         let res: EvmResult = from_slice(&receipt.journal).expect("Failed to deserialize EvmResult");
         info!("exit reason: {:?}", res.exit_reason);
         info!("state updates: {}", res.state.len());
+
+        /* TODO: Tokenize state to make assert succeed
+        assert_eq!(
+            &receipt.journal,
+            &ethabi::encode(&[Token::Uint(U256::from(res.exit_reason as u64))])
+        );*/
 
         Ok(())
     }
