@@ -31,7 +31,7 @@ contract L3L1Escrow is BonsaiApp {
         // who should get it
         address creditor;
         uint256 amount;
-        uint256 earliestBlock;
+        uint256 earliestTime;
     }
     mapping(address => Deposit) public deposits;
 
@@ -49,7 +49,7 @@ contract L3L1Escrow is BonsaiApp {
     ///      the given input and asynchronously return the verified results via the callback below.
     function checkPaymentStatus(bytes32 txHash) external {
         require(deposits[msg.sender].amount > 0, "No deposit found");
-        require(deposits[msg.sender].earliestBlock < block.number, "Too early");
+        require(deposits[msg.sender].earliestTime < block.timestamp, "Too early");
 
         // working example for eth: 0x671a3b40ecb7d51b209e68392df2d38c098aae03febd3a88be0f1fa77725bbd7
         Deposit memory deposit = deposits[msg.sender];
