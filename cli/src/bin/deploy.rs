@@ -23,7 +23,7 @@ use ethers::providers::{Http, Middleware, Provider};
 use ethers::signers::{LocalWallet, Signer};
 use ethers::types::{Address, H256};
 use hello_bonsai_contracts::HelloBonsai;
-use hello_bonsai_methods::{FIBONACCI_ELF, FIBONACCI_ID};
+use hello_bonsai_methods::{EVM_ELF, EVM_ID};
 use reqwest::{Client, Url};
 use risc0_zkvm::sha::{self, Digest, Sha256};
 
@@ -94,12 +94,12 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let elf_hash = upload_elf(
         &Url::parse(&args.bonsai_url)?,
         &args.bonsai_api_key,
-        FIBONACCI_ELF,
+        EVM_ELF,
     )
     .await?;
     println!("Uploaded guest binary");
     println!("    SHA-256:  {}", elf_hash);
-    println!("    Image ID: {}", hex::encode(Digest::from(FIBONACCI_ID)));
+    println!("    Image ID: {}", hex::encode(Digest::from(EVM_ID)));
 
     // Deploy the HelloBonsai contract.
     println!("Deploying guest binary to Bonsai...");
@@ -107,7 +107,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         client.clone(),
         (
             args.bonsai_proxy_contract_address,
-            H256(Digest::from(FIBONACCI_ID).into()),
+            H256(Digest::from(EVM_ID).into()),
         ),
     )?
     .send()

@@ -24,47 +24,30 @@ mod tests {
 
     use clap::Parser;
     use ethers_core::types::{H256};
-    use ethers_providers::Middleware;
+    use ethers_providers::{Middleware};
     use evm_core::ether_trace::{Http, Provider};
     use evm_core::{Env, EvmResult, EVM};
     use log::info;
     use risc0_zkvm::serde::{from_slice, to_vec};
 
     use ethabi::ethereum_types::U256;
+    use ethabi::ParamType::Address;
     use ethabi::Token;
     use risc0_zkvm::{Prover, ProverOpts};
     use hex;
 
-
-    use super::{FIBONACCI_ID, FIBONACCI_PATH};
-    use super::{EVM_ID, EVM_ELF, EVM_PATH};
-
-    #[test]
-    fn fibonacci() -> Result<(), Box<dyn Error>> {
-        // Skip seal as it is not needed to test the guest code.
-        let mut prover = Prover::new_with_opts(
-            &std::fs::read(FIBONACCI_PATH)?,
-            FIBONACCI_ID,
-            ProverOpts::default().with_skip_seal(true),
-        )?;
-
-        prover.add_input_u8_slice(&ethabi::encode(&[Token::Uint(U256::from(10))]));
-
-        let receipt = prover.run()?;
-
-        assert_eq!(
-            &receipt.journal,
-            &ethabi::encode(&[Token::Uint(U256::from(10)), Token::Uint(U256::from(89))])
-        );
-        Ok(())
-    }
+    use super::{EVM_ID, EVM_PATH};
 
     #[tokio::test]
     async fn evm() -> Result<(), Box<dyn Error>> {
         env_logger::init();
-        let tx_hash = ethabi::ethereum_types::H256::from_str("0x671a3b40ecb7d51b209e68392df2d38c098aae03febd3a88be0f1fa77725bbd7").expect("Invalid transaction hash");
 
-        let client = Provider::<Http>::try_from("https://eth.llamarpc.com").expect("Invalid RPC url");
+        // Add a transaction hash that contains a simple ETH transfer from creditor to depositor with the correct amount based on the L3L1Escrow on Layer 1
+        let tx_hash = H256::from_str("0x671a3b40ecb7d51b209e68392df2d38c098aae03febd3a88be0f1fa77725bbd7")
+            .expect("Invalid transaction hash");
+
+        // RPC of Layer 3 (add your own RPC node here)
+        let client = Provider::<Http>::try_from("https://xxxx-xxx-xxx.eu.ngrok.io").expect("Invalid RPC url");
         let client = Arc::new(client);
 
         let tx = client.get_transaction(tx_hash).await.unwrap().unwrap();
@@ -99,17 +82,7 @@ mod tests {
             EVM_ID,
             ProverOpts::default().with_skip_seal(true),
         )?;
-        //let mut prover = Prover::new(EVM_ELF).expect("Failed to construct prover");
 
-        //prover.add_input_u32_slice(&to_vec(&env).unwrap());
-        //prover.add_input_u32_slice(&to_vec(&zkdb).unwrap());
-       /* let inputs = "0000000000000000000000000000000000000000000000000000000000000080671a3b40ecb7d51b209e68392df2d38c098aae03febd3a88be0f1fa77725bbd70000000000000000000000004B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac150000000000000000000000004B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac15000000000000000000000000000000000000000000000000000000000000000a";
-        let inputs = hex::decode(inputs).unwrap();
-        //panic!("HEX: {}", hex::encode(inputs.as_slice()));
-
-        0x671a3b40ecb7d51b209e68392df2d38c098aae03febd3a88be0f1fa77725bbd7", address(0x4B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac15), address(0x4B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac15), uint256(10
-
-        prover.add_input_u8_slice(inputs.as_slice());*/
         prover.add_input_u8_slice(&ethabi::encode(
             &[Token::Uint(U256::from(128)), Token::String(String::from("0x671a3b40ecb7d51b209e68392df2d38c098aae03febd3a88be0f1fa77725bbd7")),
                 Token::Address(ethabi::ethereum_types::Address::from_str("0x4B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac15").unwrap()),
@@ -127,12 +100,11 @@ mod tests {
         info!("exit reason: {:?}", res.exit_reason);
         info!("state updates: {}", res.state.len());
 
-        /* TODO: Tokenize state to make assert succeed
+
         assert_eq!(
             &receipt.journal,
-            &ethabi::encode(&[Token::Uint(U256::from(res.exit_reason as u64))])
-        );*/
-
+            &ethabi::encode(&[Token::Bool(true), Token::Address(ethabi::ethereum_types::Address::from_str("0x4B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac15").unwrap())])
+        );
         Ok(())
     }
 }

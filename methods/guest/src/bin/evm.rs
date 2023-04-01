@@ -19,8 +19,6 @@ use ethabi::ethereum_types::U256;
 use ethabi::{ParamType, Token};
 use risc0_zkvm::guest::env;
 
-//use evm_core::ether_trace::{Http, Provider};
-
 risc0_zkvm::guest::entry!(main);
 
 
@@ -29,13 +27,9 @@ pub fn main() {
     // length. https://github.com/risc0/risc0/issues/402
     let length: &[u32] = env::read_slice(1);
     let input: &[u8] = env::read_slice(length[0] as usize);
-    panic!("input: {:?}, {:?}", input, length);
-    let input = ethabi::decode(&[ParamType::String, ParamType::String, ParamType::String, ParamType::Uint(256)], input).unwrap();
-    // TODO: Error handling
+    let input = ethabi::decode_whole(&[ParamType::String, ParamType::String, ParamType::String, ParamType::Uint(256)], input).unwrap();
 
-    // 0x671a3b40ecb7d51b209e68392df2d38c098aae03febd3a88be0f1fa77725bbd7
     let tx_hash = input[0].clone().into_string().unwrap();
-
     let msg_sender = input[1].clone().into_address().unwrap();
     let creditor = input[2].clone().into_address().unwrap();
     let amount: U256 = input[3].clone().into_uint().unwrap();
@@ -70,5 +64,5 @@ pub fn main() {
     env::log("");*/
 
     // Commit the journal that will be decoded in the application contract.
-    env::commit_slice(&ethabi::encode(&[Token::Bool(true), Token::Address("0x4B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac15".parse().unwrap())]));
+    env::commit_slice(&ethabi::encode(&[Token::Bool(true), Token::Address(msg_sender)]));
 }

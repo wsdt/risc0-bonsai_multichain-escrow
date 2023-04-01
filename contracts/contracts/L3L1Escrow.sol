@@ -19,14 +19,12 @@ pragma solidity ^0.8.16;
 import {IBonsaiProxy} from "./IBonsaiProxy.sol";
 import {BonsaiApp} from "./BonsaiApp.sol";
 
-/// @dev This contract demonstrates one pattern for offloading the computation of an expensive
-//       or difficult to implement function to a RISC Zero guest running on Bonsai.
+// @dev One-way bridge for ValidityRollups (easily to deploy other way round)
+// 1. user A deposits funds on chainA and provides address of creditor on chainB
+// 2. user B send funds to user A on chainB (regular transfer)
+// 3. Escrow checks if user B has sent funds to user A on chainB
+// 4. On success release funds from Escrow on chainA to user B
 contract L3L1Escrow is BonsaiApp {
-    // V1: One-way bridge for ValidityRollups (easily to deploy other way round)
-    // 1. user A deposits funds on chainA and provides address of creditor on chainB
-    // 2. user B send funds to user A on chainB (regular transfer)
-    // 3. Escrow checks if user B has sent funds to user A on chainB
-    // 4. On success release funds from Escrow on chainA to user B
     struct Deposit {
         // who should get it
         address creditor;
