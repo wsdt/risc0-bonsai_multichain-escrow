@@ -1,3 +1,35 @@
+## Crosschain Escrow for L3 <> L1 validity rollups
+
+Please find the Layer 3 repository [here](https://github.com/wsdt/zkevm-node).
+
+**How does the L3 <> L1 crosschain escrow work?**
+```sequence {theme="hand"}
+title L3 <> L1 Crosschain Escrow
+
+Alice->Smart Contract (L1): Deposits 1 ETH and puts Bob as creditor
+Bob->Alice: Sends the same amount (1 ETH) to Alice but on L3
+Bob->Smart Contract (L1): Escrow checks if Bob has sent funds to Alice on L3
+Smart Contract (L1)->Bob: Release L1 funds originated from Alice to Bob if successful
+```
+
+Native zkRollups utilizing a L3-Architecture based on Polygon's zkEVM to solve the interoperability between networks through a common state on L2. Exemplary app: Multichain Escrow between L1 and L3.
+
+Our project was inspired by this blog article:
+https://ethresear.ch/t/native-rollup-a-new-paradigm-of-zk-rollup/14529
+
+As Polygon's zkEVM Beta got live this week, we thought it would be cool to get their zkEVM running locally and putting it on top of the L2 zkEVM, to have a super simplistic L3 architecture.
+
+The trend seems to go towards a multi-layer architecture in future, such as L3's potentially for cross-chain compatibility, or L4's for privacy. Although, L3's might solve the interoperability issue between L3's and above, we might still have interoperability issues between lower layers.
+
+Thankfully, really smart people developed somewhat resilient bridges, LayerZero, Cosmos, Polkadot & others that get better every day. Nonetheless, going from L3 to L1, might require multiple steps.
+
+So we thought having a simple use case such as an Multichain Escrow between L1 and L3 could be a very interesting thought-model to exchange assets between networks that are not directly connected to each other such as L1's and L2's.
+
+Considering the nature of Validity rollups and it's finality characteristics in contrast to optimistic rollups, it should not make that much of a difference if someone uses validity proofs between L1 & L2, or L1 and L3 as long as the single layers are Validity rollups.
+
+----
+Original documentation: 
+
 # Bonsai Starter Template
 
 Starter template for writing an application using [Bonsai].
