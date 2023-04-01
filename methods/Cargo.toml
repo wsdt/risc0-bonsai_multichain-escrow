@@ -6,10 +6,21 @@ edition = "2021"
 [build-dependencies]
 risc0-build = { workspace = true }
 
+[dependencies]
+clap = { version = "4.0", features = ["derive"] }
+env_logger = "0.10.0"
+ethers-core = "1.0.2"
+ethers-providers = "1.0.2"
+evm-core = { path = "../core", features = ["ethers"] }
+log = "0.4.17"
+serde = "1.0"
+tokio = "1.23"
+
 [dev-dependencies]
 ethabi = { version = "18.0", default-features = false }
 risc0-zkp = { workspace = true }
 risc0-zkvm = { workspace = true }
+
 
 [package.metadata.risc0]
 methods = ["guest"]
