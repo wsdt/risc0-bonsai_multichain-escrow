@@ -18,11 +18,15 @@
 use ethabi::ethereum_types::U256;
 use ethabi::{ParamType, Token};
 use risc0_zkvm::guest::env;
+use ethers::providers::{Http, Middleware, Provider};
+use ethers::providers::{Http, Middleware, Provider, StreamExt};
+use ethers::types::{H256, TxHash};
+use primitive_types::{H160 as Address, U256};
 
 risc0_zkvm::guest::entry!(main);
 
 #[tokio::main]
-pub fn main() {
+pub async fn main() {
     // NOTE: env::read_slice requires a length argument. Reads must be of known
     // length. https://github.com/risc0/risc0/issues/402
     let length: &[u32] = env::read_slice(1);
@@ -45,9 +49,10 @@ pub fn main() {
     println!("Block Hash {:?} received {:?}", tx_hash, tx.block_hash);
     println!("From {:?} received {:?}", msg_sender, tx.from);
     println!("Chain_ID {:?} received {:?}", creditor, tx.chain_id);
-    println!("Gas Price{:?} received {:?}", amount, tx.gas_price);
+    println!("Gas Price{:?} received {:?}", amount, tx.value);
 
     // check
+    let res =  creditor == tx.from && amount == tx.value && tx.to == msg_sender;
 
-    env::commit_slice(&ethabi::encode(&[Token::Bool(true), Token::Address(msg_sender)]));
+    env::commit_slice(&ethabi::encode(&[Token::Bool(res), Token::Address(msg_sender)]));
 }
