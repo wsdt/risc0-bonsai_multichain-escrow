@@ -9,6 +9,7 @@ edition = "2021"
 evm-core = { path = "../../core", default-features = false }
 externc-libm = { git = "https://github.com/HaruxOS/externc-libm" }
 
+
 # NOTE: ethabi is used here instead of ethers because ethers requires getrandom support.
 ethabi = { version = "18.0", default-features = false }
 # Must match RISC Zero version specified in the project root.

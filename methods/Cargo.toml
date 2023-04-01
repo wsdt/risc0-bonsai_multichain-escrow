@@ -12,6 +12,7 @@ env_logger = "0.10.0"
 ethers-core = "1.0.2"
 ethers-providers = "1.0.2"
 evm-core = { path = "../core", features = ["ethers"] }
+hex = "0.4.3"
 log = "0.4.17"
 serde = "1.0"
 tokio = "1.23"

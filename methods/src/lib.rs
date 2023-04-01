@@ -33,7 +33,7 @@ mod tests {
     use ethabi::ethereum_types::U256;
     use ethabi::Token;
     use risc0_zkvm::{Prover, ProverOpts};
-
+    use hex;
 
 
     use super::{FIBONACCI_ID, FIBONACCI_PATH};
@@ -101,8 +101,20 @@ mod tests {
         )?;
         //let mut prover = Prover::new(EVM_ELF).expect("Failed to construct prover");
 
-        prover.add_input_u32_slice(&to_vec(&env).unwrap());
-        prover.add_input_u32_slice(&to_vec(&zkdb).unwrap());
+        //prover.add_input_u32_slice(&to_vec(&env).unwrap());
+        //prover.add_input_u32_slice(&to_vec(&zkdb).unwrap());
+       /* let inputs = "0000000000000000000000000000000000000000000000000000000000000080671a3b40ecb7d51b209e68392df2d38c098aae03febd3a88be0f1fa77725bbd70000000000000000000000004B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac150000000000000000000000004B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac15000000000000000000000000000000000000000000000000000000000000000a";
+        let inputs = hex::decode(inputs).unwrap();
+        //panic!("HEX: {}", hex::encode(inputs.as_slice()));
+
+        0x671a3b40ecb7d51b209e68392df2d38c098aae03febd3a88be0f1fa77725bbd7", address(0x4B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac15), address(0x4B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac15), uint256(10
+
+        prover.add_input_u8_slice(inputs.as_slice());*/
+        prover.add_input_u8_slice(&ethabi::encode(
+            &[Token::Uint(U256::from(128)), Token::String(String::from("0x671a3b40ecb7d51b209e68392df2d38c098aae03febd3a88be0f1fa77725bbd7")),
+                Token::Address(ethabi::ethereum_types::Address::from_str("0x4B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac15").unwrap()),
+                Token::Address(ethabi::ethereum_types::Address::from_str("0x4B45C30b8c4fAEC1c8eAaD5398F8b8e91BFbac15").unwrap()),
+                Token::Uint(U256::from(10))],));
 
         info!("Running zkvm...");
         let receipt = prover.run().expect("Failed to run guest");
