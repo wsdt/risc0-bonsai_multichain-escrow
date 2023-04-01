@@ -6,10 +6,13 @@ edition = "2021"
 [workspace]
 
 [dependencies]
+evm-core = { path = "../../core", default-features = false }
+externc-libm = { git = "https://github.com/HaruxOS/externc-libm" }
+
 # NOTE: ethabi is used here instead of ethers because ethers requires getrandom support.
 ethabi = { version = "18.0", default-features = false }
 # Must match RISC Zero version specified in the project root.
-risc0-zkvm = { version = "0.13", default-features = false }
+risc0-zkvm = { version = "0.13", default-features = false, features = [ "std" ]  }
 
 [profile.release]
 lto = true
