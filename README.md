@@ -3,9 +3,10 @@
 Please find the Layer 3 repository [here](https://github.com/wsdt/zkevm-node).
 
 **How does the L3 <> L1 crosschain escrow work?**
-```sequence {theme="hand"}
-title L3 <> L1 Crosschain Escrow
+```mermaid
+%% L3 <> L1 Crosschain Escrow
 
+sequenceDiagram
 Alice->Smart Contract (L1): Deposits 1 ETH and puts Bob as creditor
 Bob->Alice: Sends the same amount (1 ETH) to Alice but on L3
 Bob->Smart Contract (L1): Escrow checks if Bob has sent funds to Alice on L3
