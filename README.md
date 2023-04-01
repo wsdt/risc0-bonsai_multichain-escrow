@@ -3,6 +3,9 @@
 Please find the Layer 3 repository [here](https://github.com/wsdt/zkevm-node).
 
 **How does the L3 <> L1 crosschain escrow work?**
+
+Please find below a sequence diagram for a one-sided crosschain escrow between L1 and L3.
+To allow Bob to start on L3 as well, one can easily deploy the smart contract on L3 as well and stick to the same process in reverse order. 
 ```mermaid
 %% L3 <> L1 Crosschain Escrow
 
