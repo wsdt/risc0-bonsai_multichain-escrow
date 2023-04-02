@@ -38,18 +38,13 @@ pub async fn main() {
     let creditor = input[2].clone().into_address().unwrap();
     let amount: U256 = input[3].clone().into_uint().unwrap();
 
-    println!("nice");
 
-    let client = Provider::<Http>::try_from("https://eth.llamarpc.com").expect("Invalid RPC url");
+    // RPC of Layer 3 (add your own RPC node here)
+    let client = Provider::<Http>::try_from("https://2241-194-65-8-182.eu.ngrok.io").expect("Invalid RPC url");
 
     let tx_hash = H256::from_str(tx_hash).expect("Invalid transaction hash");
 
     let tx = client.get_transaction(tx_hash).await.unwrap().unwrap();
-
-    println!("Block Hash {:?} received {:?}", tx_hash, tx.block_hash);
-    println!("From {:?} received {:?}", msg_sender, tx.from);
-    println!("Chain_ID {:?} received {:?}", creditor, tx.chain_id);
-    println!("Gas Price{:?} received {:?}", amount, tx.value);
 
     // check
     let res =  creditor == tx.from && amount == tx.value && tx.to == msg_sender;
