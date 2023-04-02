@@ -1,5 +1,8 @@
 ## Crosschain Escrow for L3 <> L1 validity rollups
 
+### Our video to explain the project
+https://youtu.be/DWu_vmB7Z7M
+
 ### Our main repositories: 
 * risc0-bonsai_multichain-escrow: 
 https://github.com/wsdt/risc0-bonsai_multichain-escrow
