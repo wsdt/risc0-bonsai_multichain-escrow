@@ -1,7 +1,9 @@
 ## Crosschain Escrow for L3 <> L1 validity rollups
 
-### Our video to explain the project
-https://youtu.be/DWu_vmB7Z7M
+### ToDo
+* Actually verify the state instead of making RPC calls, etc.
+* Security
+* Consider L1<>L3 security for validity rollups
 
 ### Our main repositories: 
 * risc0-bonsai_multichain-escrow: 
