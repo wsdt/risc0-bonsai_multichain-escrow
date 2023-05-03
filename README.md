@@ -3,6 +3,8 @@
 ### ZK Hackathon Lisbon
 **This project was one of the winning projects for the risc0 competition.** 
 
+---
+
 ### ToDo
 * Actually verify the state instead of making RPC calls, etc.
 * Security
